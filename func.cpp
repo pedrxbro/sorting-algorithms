@@ -241,27 +241,41 @@ void menu(){
         cout << "9. Sair" << endl;
         cout << "Escolha uma opcao: ";
         cin >> opcao;
+        system("cls");
 
         switch(opcao) {
             case 1:
                 createArray();
                 break;
             case 2:
+                cout << "Iniciando Insercao Direta..." << endl;
                 insertionSort();
                 break;
             case 3:
+                cout << "Iniciando ShellSort..." << endl;
                 shellSort();
                 break;
             case 4:
+                cout << "Iniciando BubbleSort..." << endl;
                 bubbleSort();
                 break;
             case 5:
+                cout << "Iniciando QuickSort..." << endl;
+                //Arrumar, nao está funcionando, pode ser os parametros
+                quickSort(0, n - 1);
                 break;
             case 6:
+                cout << "Iniciando Selecao Direta..." << endl;
+                selectionSort();
                 break;
-            case 7: 
+            case 7:
+                cout << "Iniciando HeapSort..." << endl;
+                heapSort();
                 break;
             case 8:
+                cout << "Iniciando MergeSort..." << endl;
+                //Arrumar, nao está funcionando, pode ser os parametros
+                mergeSort(0, n - 1);
                 break;
             case 9:
                 cout << "Saindo..." << endl;
