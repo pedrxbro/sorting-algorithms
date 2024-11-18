@@ -286,30 +286,38 @@ void executeSort(int algorithmOption) {
     }
 }
 void menu() {
-    int arraysCount;
-    cout << "Quantos arrays deseja criar? ";
-    cin >> arraysCount;
-
+   
+    cout << "Crie o array: ";
+    createArray();
+    
     int algorithmOption = menuAlgorithm();
     double totalTime = 0.0;
+    int reps = 0;
 
-    for (int i = 0; i < arraysCount; i++) {
-        cout << "Criando o array " << i + 1 << "..." << endl;
-        createArray();
+    cout << "Quantas vezes voce quer rodar o algoritimo? ";
+    cin >> reps;
 
-        cout << "Executando ordenacao..." << endl;
+    cout << "Array de entrada" << endl;
+    printArray();
+    
+    int *tempArray = arr;
+
+    for (int i = 0; i < reps; i++) {
+
         auto start = high_resolution_clock::now();
-
         executeSort(algorithmOption);
 
-        auto end = high_resolution_clock::now();
-        duration<double> elapsed = end - start;
-        totalTime += elapsed.count();
+        auto stop = high_resolution_clock::now();
 
-        delete[] arr;
-        arr = nullptr;
+        auto duration = duration_cast<seconds>(stop - start);
+        totalTime += duration.count();
     }
 
-    cout << "Media de tempo de execucao: " << totalTime / arraysCount << " segundos." << endl;
+
+    cout << "Array ordenado" << endl;
+    printArray(); 
+    arr = tempArray;   
+
+    cout << "Media de tempo de execucao: " << totalTime / reps << " segundos." << endl;
     menu();
 }
