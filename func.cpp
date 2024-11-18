@@ -1,6 +1,8 @@
 #include <iostream>
+#include <chrono>
 
 using namespace std;
+using namespace chrono;
 
 // Variáveis globais
 int* arr = nullptr;
@@ -16,11 +18,22 @@ void createArray(){
         cin >> arr[i];
     }
 }
+void printArray() {
+    cout << "[ ";
+    for (int i = 0; i < n; i++) {
+        cout << arr[i] << " ";
+    }
+    cout << "]";
+    cout << endl;
+}
 void insertionSort(){
     if (arr == nullptr) {
         cout << "Array nao foi criado. Por favor, crie o array primeiro." << endl;
         return;
     }
+
+    cout << "Array desordenado: ";
+    printArray();
 
     for(int i = 1; i < n; i++) {
         int key = arr[i];
@@ -33,17 +46,15 @@ void insertionSort(){
     }
 
     cout << "Array ordenado: ";
-    for(int i = 0; i < n; i++) {
-        cout << arr[i] << " ";
-    }
-    cout << endl;
+    printArray();
 }
 void shellSort(){
     if (arr == nullptr) {
         cout << "Array nao foi criado. Por favor, crie o array primeiro." << endl;
         return;
     }
-
+    cout << "Array desordenado: ";
+    printArray();
     for (int gap = n / 2; gap > 0; gap /= 2) {
         for (int i = gap; i < n; i++) {
             int temp = arr[i];
@@ -56,17 +67,15 @@ void shellSort(){
     }
 
     cout << "Array ordenado: ";
-    for (int i = 0; i < n; i++) {
-        cout << arr[i] << " ";
-    }
-    cout << endl;
+    printArray();
 }
 void bubbleSort(){
     if (arr == nullptr) {
         cout << "Array nao foi criado. Por favor, crie o array primeiro." << endl;
         return;
     }
-
+    cout << "Array desordenado: ";
+    printArray();
     for (int i = 0; i < n - 1; i++) {
         for (int j = 0; j < n - i - 1; j++) {
             if (arr[j] > arr[j + 1]) {
@@ -76,12 +85,8 @@ void bubbleSort(){
             }
         }
     }
-
     cout << "Array ordenado: ";
-    for (int i = 0; i < n; i++) {
-        cout << arr[i] << " ";
-    }
-    cout << endl;
+    printArray();
 }
 
 void swap(int* a, int* b) {
@@ -107,18 +112,25 @@ void quickSort(int low, int high) {
         cout << "Array nao foi criado. Por favor, crie o array primeiro." << endl;
         return;
     }
+    cout << "Array desordenado: ";
+    printArray();
 
     if (low < high) {
         int pi = partition(low, high);
         quickSort(low, pi - 1);
         quickSort(pi + 1, high);
     }
+    cout << "Array ordenado: ";
+    printArray();
+    
 }  
 void selectionSort(){
     if (arr == nullptr) {
         cout << "Array nao foi criado. Por favor, crie o array primeiro." << endl;
         return;
     }
+    cout << "Array desordenado: ";
+    printArray();
 
     for (int i = 0; i < n - 1; i++) {
         int minIdx = i;
@@ -131,10 +143,7 @@ void selectionSort(){
     }
 
     cout << "Array ordenado: ";
-    for (int i = 0; i < n; i++) {
-        cout << arr[i] << " ";
-    }
-    cout << endl;
+    printArray();
 }
 void heapify(int n, int i) {
     int largest = i;
@@ -158,6 +167,8 @@ void heapSort() {
         cout << "Array nao foi criado. Por favor, crie o array primeiro." << endl;
         return;
     }
+    cout << "Array desordenado: ";
+    printArray();
 
     for (int i = n / 2 - 1; i >= 0; i--)
         heapify(n, i);
@@ -166,12 +177,8 @@ void heapSort() {
         swap(&arr[0], &arr[i]);
         heapify(i, 0);
     }
-
     cout << "Array ordenado: ";
-    for (int i = 0; i < n; i++) {
-        cout << arr[i] << " ";
-    }
-    cout << endl;
+    printArray();
 }
 void merge(int l, int m, int r) {
     int n1 = m - l + 1;
@@ -218,6 +225,8 @@ void mergeSort(int l, int r) {
         cout << "Array nao foi criado. Por favor, crie o array primeiro." << endl;
         return;
     }
+    cout << "Array desordenado: ";
+    printArray();
 
     if (l < r) {
         int m = l + (r - l) / 2;
@@ -225,65 +234,82 @@ void mergeSort(int l, int r) {
         mergeSort(m + 1, r);
         merge(l, m, r);
     }
+    cout << "Array ordenado: ";
+    printArray();
 }
-void menu(){
-    int opcao;
-    do {
-        cout << "Menu:" << endl;
-        cout << "1. Inserir array" << endl;
-        cout << "2. Insercao direta" << endl;
-        cout << "3. Shell Sort" << endl;
-        cout << "4. Bubble Sort" << endl;
-        cout << "5. Quick Sort" << endl;
-        cout << "6. Selecao Direta" << endl;
-        cout << "7. Heap Sort" << endl;
-        cout << "8. Merge Sort" << endl;
-        cout << "9. Sair" << endl;
-        cout << "Escolha uma opcao: ";
-        cin >> opcao;
-        system("cls");
+int menuAlgorithm() {
+    int option;
+    cout << "Escolha o algoritmo de ordenacao:" << endl;
+    cout << "1. Insercao direta" << endl;
+    cout << "2. Shell Sort" << endl;
+    cout << "3. Bubble Sort" << endl;
+    cout << "4. Quick Sort" << endl;
+    cout << "5. Selecao Direta" << endl;
+    cout << "6. Heap Sort" << endl;
+    cout << "7. Merge Sort" << endl;
+    cout << "Escolha uma opcao: ";
+    cin >> option;
+    return option; 
+}
+void executeSort(int algorithmOption) {
+    switch (algorithmOption) {
+        case 1:
+            cout << "Iniciando Insercao Direta..." << endl;
+            insertionSort();
+            break;
+        case 2:
+            cout << "Iniciando Shell Sort..." << endl;
+            shellSort();
+            break;
+        case 3:
+            cout << "Iniciando Bubble Sort..." << endl;
+            bubbleSort();
+            break;
+        case 4:
+            cout << "Iniciando Quick Sort..." << endl;
+            quickSort(0, n - 1);
+            break;
+        case 5:
+            cout << "Iniciando Selecao Direta..." << endl;
+            selectionSort();
+            break;
+        case 6:
+            cout << "Iniciando Heap Sort..." << endl;
+            heapSort();
+            break;
+        case 7:
+            cout << "Iniciando Merge Sort..." << endl;
+            mergeSort(0, n - 1);
+            break;
+        default:
+            cout << "Opcao invalida. Tente novamente." << endl;
+    }
+}
+void menu() {
+    int arraysCount;
+    cout << "Quantos arrays deseja criar? ";
+    cin >> arraysCount;
 
-        switch(opcao) {
-            case 1:
-                createArray();
-                break;
-            case 2:
-                cout << "Iniciando Insercao Direta..." << endl;
-                insertionSort();
-                break;
-            case 3:
-                cout << "Iniciando ShellSort..." << endl;
-                shellSort();
-                break;
-            case 4:
-                cout << "Iniciando BubbleSort..." << endl;
-                bubbleSort();
-                break;
-            case 5:
-                cout << "Iniciando QuickSort..." << endl;
-                //Arrumar, nao está funcionando, pode ser os parametros
-                quickSort(0, n - 1);
-                break;
-            case 6:
-                cout << "Iniciando Selecao Direta..." << endl;
-                selectionSort();
-                break;
-            case 7:
-                cout << "Iniciando HeapSort..." << endl;
-                heapSort();
-                break;
-            case 8:
-                cout << "Iniciando MergeSort..." << endl;
-                //Arrumar, nao está funcionando, pode ser os parametros
-                mergeSort(0, n - 1);
-                break;
-            case 9:
-                cout << "Saindo..." << endl;
-                break;
-            default:
-                cout << "Opcao invalida. Tente novamente." << endl;
-        }
-    } while(opcao != 9);
+    int algorithmOption = menuAlgorithm();
+    double totalTime = 0.0;
 
-    delete[] arr;
+    for (int i = 0; i < arraysCount; i++) {
+        cout << "Criando o array " << i + 1 << "..." << endl;
+        createArray();
+
+        cout << "Executando ordenacao..." << endl;
+        auto start = high_resolution_clock::now();
+
+        executeSort(algorithmOption);
+
+        auto end = high_resolution_clock::now();
+        duration<double> elapsed = end - start;
+        totalTime += elapsed.count();
+
+        delete[] arr;
+        arr = nullptr;
+    }
+
+    cout << "Media de tempo de execucao: " << totalTime / arraysCount << " segundos." << endl;
+    menu();
 }

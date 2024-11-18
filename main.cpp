@@ -3,6 +3,7 @@
 using namespace std;
 
 int main() {
+    cout << "Bem-vindo ao programa de ordenacao de arrays!" << endl;
     menu();
     return 0;
 }

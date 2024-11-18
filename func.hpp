@@ -2,7 +2,9 @@
 #define FUNC_HPP
 
 void menu();
+int menuAlgorithm();
 void createArray();
+void printArray();
 
 //Algoritimos de ordenação
 void inserctionSort();
