@@ -1,24 +1,27 @@
 #include <iostream>
 #include <chrono>
+#include <iomanip>
 
 using namespace std;
 using namespace chrono;
 
 // Variáveis globais
 int* arr = nullptr;
+int* tempArr = nullptr;
 int n = 0;
 
-void createArray() {
+void createArray(){
     cout << "Digite o tamanho do array: ";
     cin >> n;
 
     arr = new int[n];
-    for (int i = 0; i < n; i++) {
+    tempArr = new int[n];
+    for(int i = 0; i < n; i++){
         cout << "Digite o valor da posicao " << i << ": ";
         cin >> arr[i];
+        tempArr[i] = arr[i];
     }
 }
-
 void printArray() {
     cout << "[ ";
     for (int i = 0; i < n; i++) {
@@ -27,39 +30,36 @@ void printArray() {
     cout << "]";
     cout << endl;
 }
-
-void insertionSort(int* tempArr) {
-    for (int i = 1; i < n; i++) {
-        int key = tempArr[i];
+void insertionSort(){
+    for(int i = 1; i < n; i++) {
+        int key = arr[i];
         int j = i - 1;
-        while (j >= 0 && tempArr[j] > key) {
-            tempArr[j + 1] = tempArr[j];
+        while(j >= 0 && arr[j] > key) {
+            arr[j + 1] = arr[j];
             j = j - 1;
         }
-        tempArr[j + 1] = key;
+        arr[j + 1] = key;
     }
 }
-
-void shellSort(int* tempArr) {
+void shellSort(){
     for (int gap = n / 2; gap > 0; gap /= 2) {
         for (int i = gap; i < n; i++) {
-            int temp = tempArr[i];
+            int temp = arr[i];
             int j;
-            for (j = i; j >= gap && tempArr[j - gap] > temp; j -= gap) {
-                tempArr[j] = tempArr[j - gap];
+            for (j = i; j >= gap && arr[j - gap] > temp; j -= gap) {
+                arr[j] = arr[j - gap];
             }
-            tempArr[j] = temp;
+            arr[j] = temp;
         }
     }
 }
-
-void bubbleSort(int* tempArr) {
+void bubbleSort(){
     for (int i = 0; i < n - 1; i++) {
         for (int j = 0; j < n - i - 1; j++) {
-            if (tempArr[j] > tempArr[j + 1]) {
-                int temp = tempArr[j];
-                tempArr[j] = tempArr[j + 1];
-                tempArr[j + 1] = temp;
+            if (arr[j] > arr[j + 1]) {
+                int temp = arr[j];
+                arr[j] = arr[j + 1];
+                arr[j + 1] = temp;
             }
         }
     }
@@ -70,69 +70,75 @@ void swap(int* a, int* b) {
     *a = *b;
     *b = temp;
 }
-
-int partition(int low, int high, int* tempArr) {
-    int pivot = tempArr[high];
+int partition(int low, int high) {
+    int pivot = arr[high];
     int i = (low - 1);
 
     for (int j = low; j <= high - 1; j++) {
-        if (tempArr[j] < pivot) {
+        if (arr[j] < pivot) {
             i++;
-            swap(&tempArr[i], &tempArr[j]);
+            swap(&arr[i], &arr[j]);
         }
     }
-    swap(&tempArr[i + 1], &tempArr[high]);
+    swap(&arr[i + 1], &arr[high]);
     return (i + 1);
 }
-
-void quickSort(int low, int high, int* tempArr) {
-    if (low < high) {
-        int pi = partition(low, high, tempArr);
-        quickSort(low, pi - 1, tempArr);
-        quickSort(pi + 1, high, tempArr);
+void quickSort(int low, int high) {
+    if (arr == nullptr) {
+        cout << "Array nao foi criado. Por favor, crie o array primeiro." << endl;
+        return;
     }
-}
 
-void selectionSort(int* tempArr) {
+    if (low < high) {
+        int pi = partition(low, high);
+        quickSort(low, pi - 1);
+        quickSort(pi + 1, high);
+    }
+    
+}  
+void selectionSort(){
+    if (arr == nullptr) {
+        cout << "Array nao foi criado. Por favor, crie o array primeiro." << endl;
+        return;
+    }
+
     for (int i = 0; i < n - 1; i++) {
         int minIdx = i;
         for (int j = i + 1; j < n; j++) {
-            if (tempArr[j] < tempArr[minIdx]) {
+            if (arr[j] < arr[minIdx]) {
                 minIdx = j;
             }
         }
-        swap(&tempArr[minIdx], &tempArr[i]);
+        swap(&arr[minIdx], &arr[i]);
     }
 }
-
-void heapify(int n, int i, int* tempArr) {
+void heapify(int n, int i) {
     int largest = i;
     int left = 2 * i + 1;
     int right = 2 * i + 2;
 
-    if (left < n && tempArr[left] > tempArr[largest])
+    if (left < n && arr[left] > arr[largest])
         largest = left;
 
-    if (right < n && tempArr[right] > tempArr[largest])
+    if (right < n && arr[right] > arr[largest])
         largest = right;
 
     if (largest != i) {
-        swap(&tempArr[i], &tempArr[largest]);
-        heapify(n, largest, tempArr);
+        swap(&arr[i], &arr[largest]);
+        heapify(n, largest);
     }
 }
 
-void heapSort(int* tempArr) {
+void heapSort() {
     for (int i = n / 2 - 1; i >= 0; i--)
-        heapify(n, i, tempArr);
+        heapify(n, i);
 
     for (int i = n - 1; i > 0; i--) {
-        swap(&tempArr[0], &tempArr[i]);
-        heapify(i, 0, tempArr);
+        swap(&arr[0], &arr[i]);
+        heapify(i, 0);
     }
 }
-
-void merge(int l, int m, int r, int* tempArr) {
+void merge(int l, int m, int r) {
     int n1 = m - l + 1;
     int n2 = r - m;
 
@@ -140,30 +146,30 @@ void merge(int l, int m, int r, int* tempArr) {
     int* R = new int[n2];
 
     for (int i = 0; i < n1; i++)
-        L[i] = tempArr[l + i];
+        L[i] = arr[l + i];
     for (int j = 0; j < n2; j++)
-        R[j] = tempArr[m + 1 + j];
+        R[j] = arr[m + 1 + j];
 
     int i = 0, j = 0, k = l;
     while (i < n1 && j < n2) {
         if (L[i] <= R[j]) {
-            tempArr[k] = L[i];
+            arr[k] = L[i];
             i++;
         } else {
-            tempArr[k] = R[j];
+            arr[k] = R[j];
             j++;
         }
         k++;
     }
 
     while (i < n1) {
-        tempArr[k] = L[i];
+        arr[k] = L[i];
         i++;
         k++;
     }
 
     while (j < n2) {
-        tempArr[k] = R[j];
+        arr[k] = R[j];
         j++;
         k++;
     }
@@ -172,43 +178,14 @@ void merge(int l, int m, int r, int* tempArr) {
     delete[] R;
 }
 
-void mergeSort(int l, int r, int* tempArr) {
+void mergeSort(int l, int r) {
     if (l < r) {
         int m = l + (r - l) / 2;
-        mergeSort(l, m, tempArr);
-        mergeSort(m + 1, r, tempArr);
-        merge(l, m, r, tempArr);
+        mergeSort(l, m);
+        mergeSort(m + 1, r);
+        merge(l, m, r);
     }
 }
-
-void executeSort(int algorithmOption, int* tempArr) {
-    switch (algorithmOption) {
-        case 1:
-            insertionSort(tempArr);
-            break;
-        case 2:
-            shellSort(tempArr);
-            break;
-        case 3:
-            bubbleSort(tempArr);
-            break;
-        case 4:
-            quickSort(0, n - 1, tempArr);
-            break;
-        case 5:
-            selectionSort(tempArr);
-            break;
-        case 6:
-            heapSort(tempArr);
-            break;
-        case 7:
-            mergeSort(0, n - 1, tempArr);
-            break;
-        default:
-            cout << "Opcao invalida. Tente novamente." << endl;
-    }
-}
-
 int menuAlgorithm() {
     int option;
     cout << "Escolha o algoritmo de ordenacao:" << endl;
@@ -221,45 +198,89 @@ int menuAlgorithm() {
     cout << "7. Merge Sort" << endl;
     cout << "Escolha uma opcao: ";
     cin >> option;
-    return option;
+    return option; 
 }
-
+void executeSort(int algorithmOption) {
+    switch (algorithmOption) {
+        case 1:
+            insertionSort();
+            break;
+        case 2:
+            shellSort();
+            break;
+        case 3:
+            bubbleSort();
+            break;
+        case 4:
+            quickSort(0, n - 1);
+            break;
+        case 5:
+            selectionSort();
+            break;
+        case 6:
+            heapSort();
+            break;
+        case 7:
+            mergeSort(0, n - 1);
+            break;
+        default:
+            cout << "Opcao invalida. Tente novamente." << endl;
+    }
+}
 void menu() {
-    createArray();
+    bool repeat = true;
 
-    int algorithmOption = menuAlgorithm();
-    double totalTime = 0.0;
-    int reps = 0;
+    while (repeat) {
+        createArray();
 
-    cout << "Quantas vezes voce quer rodar o algoritimo? ";
-    cin >> reps;
+        int algorithmOption = menuAlgorithm();
+        int reps = 0;
+        double totalTime = 0;
 
-    cout << "Array de entrada" << endl;
-    printArray();
+        cout << "Quantas vezes deseja executar o algoritmo? ";
+        cin >> reps;
 
-    // Array temporário para restaurar o estado inicial a cada iteração
-    int* tempArray = new int[n];
-
-    for (int i = 0; i < reps; i++) {
-        // Copiar o array original para o array temporário
-        for (int j = 0; j < n; j++) {
-            tempArray[j] = arr[j];
+        if (reps <= 0) {
+            cout << "Número de repetições inválido. Tente novamente." << endl;
+            continue;
         }
 
-        // Medindo o tempo de execução
-        high_resolution_clock::time_point start = high_resolution_clock::now();
-        executeSort(algorithmOption, tempArray);
-        high_resolution_clock::time_point end = high_resolution_clock::now();
+        /*cout << "Array de entrada: ";
+        printArray();
+        */
 
-        duration<double> elapsed = end - start;
-        totalTime += elapsed.count();
+        for (int i = 0; i < reps; i++) {
+            // Reseta o estado do array
+            for (int j = 0; j < n; j++) {
+                arr[j] = tempArr[j];
+            }
+
+            // Medir o tempo de execução
+            auto start = high_resolution_clock::now();
+
+            executeSort(algorithmOption);
+
+            auto end = high_resolution_clock::now();
+            duration<double> elapsed = end - start;
+            totalTime += elapsed.count();
+        }
+
+        /*cout << "Array ordenado: ";
+        printArray();*/
+        
+        cout << "Tempo total de execucao: " << totalTime << " segundos" << endl;
+        cout << "Tempo medio de execucao: " << totalTime / reps << " segundos" << endl;
+
+        char choice;
+        cout << "Deseja usar outro algoritmo de ordenacao? (s/n): ";
+        cin >> choice;
+
+        if (choice != 's' && choice != 'S') {
+            repeat = false;
+        }
     }
 
-    cout << "Array ordenado" << endl;
-    printArray();
-
-    cout << "Tempo total: " << totalTime << " segundos" << endl;
-    cout << "Media de tempo de execucao: " << totalTime / reps << " segundos" << endl;
-
-    delete[] tempArray;
+    delete[] arr;
+    delete[] tempArr;
+    cout << "Programa encerrado." << endl;
 }
