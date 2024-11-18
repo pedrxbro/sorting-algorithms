@@ -8,16 +8,17 @@ using namespace chrono;
 int* arr = nullptr;
 int n = 0;
 
-void createArray(){
+void createArray() {
     cout << "Digite o tamanho do array: ";
     cin >> n;
 
     arr = new int[n];
-    for(int i = 0; i < n; i++){
+    for (int i = 0; i < n; i++) {
         cout << "Digite o valor da posicao " << i << ": ";
         cin >> arr[i];
     }
 }
+
 void printArray() {
     cout << "[ ";
     for (int i = 0; i < n; i++) {
@@ -26,67 +27,42 @@ void printArray() {
     cout << "]";
     cout << endl;
 }
-void insertionSort(){
-    if (arr == nullptr) {
-        cout << "Array nao foi criado. Por favor, crie o array primeiro." << endl;
-        return;
-    }
 
-    cout << "Array desordenado: ";
-    printArray();
-
-    for(int i = 1; i < n; i++) {
-        int key = arr[i];
+void insertionSort(int* tempArr) {
+    for (int i = 1; i < n; i++) {
+        int key = tempArr[i];
         int j = i - 1;
-        while(j >= 0 && arr[j] > key) {
-            arr[j + 1] = arr[j];
+        while (j >= 0 && tempArr[j] > key) {
+            tempArr[j + 1] = tempArr[j];
             j = j - 1;
         }
-        arr[j + 1] = key;
+        tempArr[j + 1] = key;
     }
-
-    cout << "Array ordenado: ";
-    printArray();
 }
-void shellSort(){
-    if (arr == nullptr) {
-        cout << "Array nao foi criado. Por favor, crie o array primeiro." << endl;
-        return;
-    }
-    cout << "Array desordenado: ";
-    printArray();
+
+void shellSort(int* tempArr) {
     for (int gap = n / 2; gap > 0; gap /= 2) {
         for (int i = gap; i < n; i++) {
-            int temp = arr[i];
+            int temp = tempArr[i];
             int j;
-            for (j = i; j >= gap && arr[j - gap] > temp; j -= gap) {
-                arr[j] = arr[j - gap];
+            for (j = i; j >= gap && tempArr[j - gap] > temp; j -= gap) {
+                tempArr[j] = tempArr[j - gap];
             }
-            arr[j] = temp;
+            tempArr[j] = temp;
         }
     }
-
-    cout << "Array ordenado: ";
-    printArray();
 }
-void bubbleSort(){
-    if (arr == nullptr) {
-        cout << "Array nao foi criado. Por favor, crie o array primeiro." << endl;
-        return;
-    }
-    cout << "Array desordenado: ";
-    printArray();
+
+void bubbleSort(int* tempArr) {
     for (int i = 0; i < n - 1; i++) {
         for (int j = 0; j < n - i - 1; j++) {
-            if (arr[j] > arr[j + 1]) {
-                int temp = arr[j];
-                arr[j] = arr[j + 1];
-                arr[j + 1] = temp;
+            if (tempArr[j] > tempArr[j + 1]) {
+                int temp = tempArr[j];
+                tempArr[j] = tempArr[j + 1];
+                tempArr[j + 1] = temp;
             }
         }
     }
-    cout << "Array ordenado: ";
-    printArray();
 }
 
 void swap(int* a, int* b) {
@@ -94,93 +70,69 @@ void swap(int* a, int* b) {
     *a = *b;
     *b = temp;
 }
-int partition(int low, int high) {
-    int pivot = arr[high];
+
+int partition(int low, int high, int* tempArr) {
+    int pivot = tempArr[high];
     int i = (low - 1);
 
     for (int j = low; j <= high - 1; j++) {
-        if (arr[j] < pivot) {
+        if (tempArr[j] < pivot) {
             i++;
-            swap(&arr[i], &arr[j]);
+            swap(&tempArr[i], &tempArr[j]);
         }
     }
-    swap(&arr[i + 1], &arr[high]);
+    swap(&tempArr[i + 1], &tempArr[high]);
     return (i + 1);
 }
-void quickSort(int low, int high) {
-    if (arr == nullptr) {
-        cout << "Array nao foi criado. Por favor, crie o array primeiro." << endl;
-        return;
-    }
-    cout << "Array desordenado: ";
-    printArray();
 
+void quickSort(int low, int high, int* tempArr) {
     if (low < high) {
-        int pi = partition(low, high);
-        quickSort(low, pi - 1);
-        quickSort(pi + 1, high);
+        int pi = partition(low, high, tempArr);
+        quickSort(low, pi - 1, tempArr);
+        quickSort(pi + 1, high, tempArr);
     }
-    cout << "Array ordenado: ";
-    printArray();
-    
-}  
-void selectionSort(){
-    if (arr == nullptr) {
-        cout << "Array nao foi criado. Por favor, crie o array primeiro." << endl;
-        return;
-    }
-    cout << "Array desordenado: ";
-    printArray();
+}
 
+void selectionSort(int* tempArr) {
     for (int i = 0; i < n - 1; i++) {
         int minIdx = i;
         for (int j = i + 1; j < n; j++) {
-            if (arr[j] < arr[minIdx]) {
+            if (tempArr[j] < tempArr[minIdx]) {
                 minIdx = j;
             }
         }
-        swap(&arr[minIdx], &arr[i]);
+        swap(&tempArr[minIdx], &tempArr[i]);
     }
-
-    cout << "Array ordenado: ";
-    printArray();
 }
-void heapify(int n, int i) {
+
+void heapify(int n, int i, int* tempArr) {
     int largest = i;
     int left = 2 * i + 1;
     int right = 2 * i + 2;
 
-    if (left < n && arr[left] > arr[largest])
+    if (left < n && tempArr[left] > tempArr[largest])
         largest = left;
 
-    if (right < n && arr[right] > arr[largest])
+    if (right < n && tempArr[right] > tempArr[largest])
         largest = right;
 
     if (largest != i) {
-        swap(&arr[i], &arr[largest]);
-        heapify(n, largest);
+        swap(&tempArr[i], &tempArr[largest]);
+        heapify(n, largest, tempArr);
     }
 }
 
-void heapSort() {
-    if (arr == nullptr) {
-        cout << "Array nao foi criado. Por favor, crie o array primeiro." << endl;
-        return;
-    }
-    cout << "Array desordenado: ";
-    printArray();
-
+void heapSort(int* tempArr) {
     for (int i = n / 2 - 1; i >= 0; i--)
-        heapify(n, i);
+        heapify(n, i, tempArr);
 
     for (int i = n - 1; i > 0; i--) {
-        swap(&arr[0], &arr[i]);
-        heapify(i, 0);
+        swap(&tempArr[0], &tempArr[i]);
+        heapify(i, 0, tempArr);
     }
-    cout << "Array ordenado: ";
-    printArray();
 }
-void merge(int l, int m, int r) {
+
+void merge(int l, int m, int r, int* tempArr) {
     int n1 = m - l + 1;
     int n2 = r - m;
 
@@ -188,30 +140,30 @@ void merge(int l, int m, int r) {
     int* R = new int[n2];
 
     for (int i = 0; i < n1; i++)
-        L[i] = arr[l + i];
+        L[i] = tempArr[l + i];
     for (int j = 0; j < n2; j++)
-        R[j] = arr[m + 1 + j];
+        R[j] = tempArr[m + 1 + j];
 
     int i = 0, j = 0, k = l;
     while (i < n1 && j < n2) {
         if (L[i] <= R[j]) {
-            arr[k] = L[i];
+            tempArr[k] = L[i];
             i++;
         } else {
-            arr[k] = R[j];
+            tempArr[k] = R[j];
             j++;
         }
         k++;
     }
 
     while (i < n1) {
-        arr[k] = L[i];
+        tempArr[k] = L[i];
         i++;
         k++;
     }
 
     while (j < n2) {
-        arr[k] = R[j];
+        tempArr[k] = R[j];
         j++;
         k++;
     }
@@ -220,23 +172,43 @@ void merge(int l, int m, int r) {
     delete[] R;
 }
 
-void mergeSort(int l, int r) {
-    if (arr == nullptr) {
-        cout << "Array nao foi criado. Por favor, crie o array primeiro." << endl;
-        return;
-    }
-    cout << "Array desordenado: ";
-    printArray();
-
+void mergeSort(int l, int r, int* tempArr) {
     if (l < r) {
         int m = l + (r - l) / 2;
-        mergeSort(l, m);
-        mergeSort(m + 1, r);
-        merge(l, m, r);
+        mergeSort(l, m, tempArr);
+        mergeSort(m + 1, r, tempArr);
+        merge(l, m, r, tempArr);
     }
-    cout << "Array ordenado: ";
-    printArray();
 }
+
+void executeSort(int algorithmOption, int* tempArr) {
+    switch (algorithmOption) {
+        case 1:
+            insertionSort(tempArr);
+            break;
+        case 2:
+            shellSort(tempArr);
+            break;
+        case 3:
+            bubbleSort(tempArr);
+            break;
+        case 4:
+            quickSort(0, n - 1, tempArr);
+            break;
+        case 5:
+            selectionSort(tempArr);
+            break;
+        case 6:
+            heapSort(tempArr);
+            break;
+        case 7:
+            mergeSort(0, n - 1, tempArr);
+            break;
+        default:
+            cout << "Opcao invalida. Tente novamente." << endl;
+    }
+}
+
 int menuAlgorithm() {
     int option;
     cout << "Escolha o algoritmo de ordenacao:" << endl;
@@ -249,47 +221,12 @@ int menuAlgorithm() {
     cout << "7. Merge Sort" << endl;
     cout << "Escolha uma opcao: ";
     cin >> option;
-    return option; 
+    return option;
 }
-void executeSort(int algorithmOption) {
-    switch (algorithmOption) {
-        case 1:
-            cout << "Iniciando Insercao Direta..." << endl;
-            insertionSort();
-            break;
-        case 2:
-            cout << "Iniciando Shell Sort..." << endl;
-            shellSort();
-            break;
-        case 3:
-            cout << "Iniciando Bubble Sort..." << endl;
-            bubbleSort();
-            break;
-        case 4:
-            cout << "Iniciando Quick Sort..." << endl;
-            quickSort(0, n - 1);
-            break;
-        case 5:
-            cout << "Iniciando Selecao Direta..." << endl;
-            selectionSort();
-            break;
-        case 6:
-            cout << "Iniciando Heap Sort..." << endl;
-            heapSort();
-            break;
-        case 7:
-            cout << "Iniciando Merge Sort..." << endl;
-            mergeSort(0, n - 1);
-            break;
-        default:
-            cout << "Opcao invalida. Tente novamente." << endl;
-    }
-}
+
 void menu() {
-   
-    cout << "Crie o array: ";
     createArray();
-    
+
     int algorithmOption = menuAlgorithm();
     double totalTime = 0.0;
     int reps = 0;
@@ -299,25 +236,30 @@ void menu() {
 
     cout << "Array de entrada" << endl;
     printArray();
-    
-    int *tempArray = arr;
+
+    // Array temporário para restaurar o estado inicial a cada iteração
+    int* tempArray = new int[n];
 
     for (int i = 0; i < reps; i++) {
+        // Copiar o array original para o array temporário
+        for (int j = 0; j < n; j++) {
+            tempArray[j] = arr[j];
+        }
 
-        auto start = high_resolution_clock::now();
-        executeSort(algorithmOption);
+        // Medindo o tempo de execução
+        high_resolution_clock::time_point start = high_resolution_clock::now();
+        executeSort(algorithmOption, tempArray);
+        high_resolution_clock::time_point end = high_resolution_clock::now();
 
-        auto stop = high_resolution_clock::now();
-
-        auto duration = duration_cast<seconds>(stop - start);
-        totalTime += duration.count();
+        duration<double> elapsed = end - start;
+        totalTime += elapsed.count();
     }
 
-
     cout << "Array ordenado" << endl;
-    printArray(); 
-    arr = tempArray;   
+    printArray();
 
-    cout << "Media de tempo de execucao: " << totalTime / reps << " segundos." << endl;
-    menu();
+    cout << "Tempo total: " << totalTime << " segundos" << endl;
+    cout << "Media de tempo de execucao: " << totalTime / reps << " segundos" << endl;
+
+    delete[] tempArray;
 }
