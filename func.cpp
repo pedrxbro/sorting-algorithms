@@ -1,6 +1,8 @@
 #include <iostream>
 #include <chrono>
 #include <iomanip>
+#include <algorithm>
+#include <random>
 
 using namespace std;
 using namespace chrono;
@@ -16,19 +18,46 @@ void createArray(){
 
     arr = new int[n];
     tempArr = new int[n];
-    for(int i = 0; i < n; i++){
-        cout << "Digite o valor da posicao " << i << ": ";
-        cin >> arr[i];
+
+    int option;
+    cout << "Escolha a situacao do array:" << endl;
+    cout << "1. Melhor caso (ja ordenado)" << endl;
+    cout << "2. Pior caso (ordem contraria)" << endl;
+    cout << "3. Aleatorio" << endl;
+    cout << "Escolha uma opção: ";
+    cin >> option;
+
+    switch (option) {
+    case 1:
+        //Melhor caso
+        for (int i = 0; i < n; i++) {
+            arr[i] = i + 1;
+        }
+        break;
+    case 2:
+        //Pior caso
+        for (int i = 0; i < n; i++) {
+            arr[i] = n - i;
+        }
+        break;
+    case 3:
+        //Aleatório
+        srand(time(0));
+        for (int i = 0; i < n; i++) {
+            arr[i] = rand() % 1000;
+        }
+        break;
+    default:
+        cout << "Opção inválida. Criando array aleatório por padrão." << endl;
+        srand(time(0));
+        for (int i = 0; i < n; i++) {
+            arr[i] = rand() % 1000;
+        }
+}
+    //Copia o array para tempArr
+    for (int i = 0; i < n; i++) {
         tempArr[i] = arr[i];
     }
-}
-void printArray() {
-    cout << "[ ";
-    for (int i = 0; i < n; i++) {
-        cout << arr[i] << " ";
-    }
-    cout << "]";
-    cout << endl;
 }
 void insertionSort(){
     for(int i = 1; i < n; i++) {
@@ -233,46 +262,50 @@ void menu() {
     while (repeat) {
         createArray();
 
-        int algorithmOption = menuAlgorithm();
-        int reps = 0;
-        double totalTime = 0;
+        bool sameArray = true;
+        while (sameArray) {
+            int algorithmOption = menuAlgorithm();
+            int reps = 0;
+            double totalTime = 0;
 
-        cout << "Quantas vezes deseja executar o algoritmo? ";
-        cin >> reps;
+            cout << "Quantas vezes deseja executar o algoritmo? ";
+            cin >> reps;
 
-        if (reps <= 0) {
-            cout << "Número de repetições inválido. Tente novamente." << endl;
-            continue;
-        }
-
-        /*cout << "Array de entrada: ";
-        printArray();
-        */
-
-        for (int i = 0; i < reps; i++) {
-            // Reseta o estado do array
-            for (int j = 0; j < n; j++) {
-                arr[j] = tempArr[j];
+            if (reps <= 0) {
+                cout << "Número de repetições inválido. Tente novamente." << endl;
+                continue;
             }
 
-            // Medir o tempo de execução
-            auto start = high_resolution_clock::now();
+            for (int i = 0; i < reps; i++) {
+                // Reseta o estado do array
+                for (int j = 0; j < n; j++) {
+                    arr[j] = tempArr[j];
+                }
 
-            executeSort(algorithmOption);
+                // Medir o tempo de execução
+                auto start = high_resolution_clock::now();
 
-            auto end = high_resolution_clock::now();
-            duration<double> elapsed = end - start;
-            totalTime += elapsed.count();
+                executeSort(algorithmOption);
+
+                auto end = high_resolution_clock::now();
+                duration<double> elapsed = end - start;
+                totalTime += duration_cast<duration<double>>(end - start).count();
+            }
+
+            cout << "Tempo total de execucao: " << totalTime << " segundos" << endl;
+            cout << "Tempo medio de execucao: " << totalTime / reps << " segundos" << endl;
+
+            char choice;
+            cout << "Deseja usar outro algoritmo de ordenacao com o mesmo array? (s/n): ";
+            cin >> choice;
+
+            if (choice != 's' && choice != 'S') {
+                sameArray = false;
+            }
         }
 
-        /*cout << "Array ordenado: ";
-        printArray();*/
-        
-        cout << "Tempo total de execucao: " << totalTime << " segundos" << endl;
-        cout << "Tempo medio de execucao: " << totalTime / reps << " segundos" << endl;
-
         char choice;
-        cout << "Deseja usar outro algoritmo de ordenacao? (s/n): ";
+        cout << "Deseja criar um novo array e testar outro algoritmo de ordenacao? (s/n): ";
         cin >> choice;
 
         if (choice != 's' && choice != 'S') {
