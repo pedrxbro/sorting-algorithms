@@ -12,6 +12,10 @@ int* arr = nullptr;
 int* tempArr = nullptr;
 int n = 0;
 
+void limparTela(){
+    system("cls");
+}
+
 void createArray(){
     cout << "Digite o tamanho do array: ";
     cin >> n;
@@ -24,8 +28,10 @@ void createArray(){
     cout << "1. Melhor caso (ja ordenado)" << endl;
     cout << "2. Pior caso (ordem contraria)" << endl;
     cout << "3. Aleatorio" << endl;
-    cout << "Escolha uma opção: ";
+    cout << "Escolha uma opcao: ";
     cin >> option;
+
+    limparTela();
 
     switch (option) {
     case 1:
@@ -48,7 +54,7 @@ void createArray(){
         }
         break;
     default:
-        cout << "Opção inválida. Criando array aleatório por padrão." << endl;
+        cout << "Opcao invalida. Criando array aleatorio por padrao." << endl;
         srand(time(0));
         for (int i = 0; i < n; i++) {
             arr[i] = rand() % 1000;
@@ -113,12 +119,7 @@ int partition(int low, int high) {
     return (i + 1);
 }
 void quickSort(int low, int high) {
-    if (arr == nullptr) {
-        cout << "Array nao foi criado. Por favor, crie o array primeiro." << endl;
-        return;
-    }
-
-    if (low < high) {
+ if (low < high) {
         int pi = partition(low, high);
         quickSort(low, pi - 1);
         quickSort(pi + 1, high);
@@ -126,11 +127,6 @@ void quickSort(int low, int high) {
     
 }  
 void selectionSort(){
-    if (arr == nullptr) {
-        cout << "Array nao foi criado. Por favor, crie o array primeiro." << endl;
-        return;
-    }
-
     for (int i = 0; i < n - 1; i++) {
         int minIdx = i;
         for (int j = i + 1; j < n; j++) {
@@ -271,48 +267,60 @@ void menu() {
             cout << "Quantas vezes deseja executar o algoritmo? ";
             cin >> reps;
 
+            limparTela();
+
             if (reps <= 0) {
                 cout << "Número de repetições inválido. Tente novamente." << endl;
                 continue;
             }
 
             for (int i = 0; i < reps; i++) {
-                // Reseta o estado do array
+                //Reseta o estado do array
                 for (int j = 0; j < n; j++) {
                     arr[j] = tempArr[j];
                 }
 
-                // Medir o tempo de execução
+                //Medir o tempo de execução
                 auto start = high_resolution_clock::now();
 
                 executeSort(algorithmOption);
 
                 auto end = high_resolution_clock::now();
                 duration<double> elapsed = end - start;
-                totalTime += duration_cast<duration<double>>(end - start).count();
+                totalTime += duration_cast<nanoseconds>(end - start).count();
             }
 
-            cout << "Tempo total de execucao: " << totalTime << " segundos" << endl;
-            cout << "Tempo medio de execucao: " << totalTime / reps << " segundos" << endl;
+            limparTela();
 
-            char choice;
-            cout << "Deseja usar outro algoritmo de ordenacao com o mesmo array? (s/n): ";
-            cin >> choice;
+            cout << fixed << setprecision(9);  // Configura precisão do cout
+            cout << "Tempo total de execucao: " << totalTime / 1e9 << " segundos" << endl;  // Converte para segundos
+            double avgTime = totalTime / reps;
+            cout << "Tempo medio de execucao: " << avgTime / 1e9 << " segundos" << endl;
+            
+            if(avgTime != 0 && totalTime != 0){
+                char choice;
+                cout << "Deseja usar outro algoritmo de ordenacao com o mesmo array? (s/n): ";
+                cin >> choice;
 
-            if (choice != 's' && choice != 'S') {
+                if (choice != 's' && choice != 'S') {
+                    sameArray = false;
+                }
+            }else{
                 sameArray = false;
+                cout << "Array muito curto e/ou numero de repeticoes muito baixo. Tente novamente." << endl;
             }
         }
-
         char choice;
         cout << "Deseja criar um novo array e testar outro algoritmo de ordenacao? (s/n): ";
         cin >> choice;
+
+        limparTela();
 
         if (choice != 's' && choice != 'S') {
             repeat = false;
         }
     }
-
+    limparTela();
     delete[] arr;
     delete[] tempArr;
     cout << "Programa encerrado." << endl;
